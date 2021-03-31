@@ -1,0 +1,150 @@
+
+project1_final.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         000000b0  00000000  00000000  00000054  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000000  00800060  00800060  00000104  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .comment      00000030  00000000  00000000  00000104  2**0
+                  CONTENTS, READONLY
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000134  2**2
+                  CONTENTS, READONLY
+  4 .debug_aranges 00000028  00000000  00000000  00000170  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_info   000005d0  00000000  00000000  00000198  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_abbrev 00000546  00000000  00000000  00000768  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_line   0000021b  00000000  00000000  00000cae  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_frame  00000034  00000000  00000000  00000ecc  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_str    000002f9  00000000  00000000  00000f00  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_loc    00000028  00000000  00000000  000011f9  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_ranges 00000018  00000000  00000000  00001221  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2a 00 	jmp	0x54	; 0x54 <__ctors_end>
+   4:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+   8:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+   c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  10:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  14:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  18:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  1c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  20:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  24:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  28:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  2c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  30:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  34:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  38:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  3c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  40:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  44:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  48:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  4c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  50:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+
+00000054 <__ctors_end>:
+  54:	11 24       	eor	r1, r1
+  56:	1f be       	out	0x3f, r1	; 63
+  58:	cf e5       	ldi	r28, 0x5F	; 95
+  5a:	d8 e0       	ldi	r29, 0x08	; 8
+  5c:	de bf       	out	0x3e, r29	; 62
+  5e:	cd bf       	out	0x3d, r28	; 61
+  60:	0e 94 47 00 	call	0x8e	; 0x8e <main>
+  64:	0c 94 56 00 	jmp	0xac	; 0xac <_exit>
+
+00000068 <__bad_interrupt>:
+  68:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+0000006c <avr_wait>:
+#include "avr.h"
+#include <avr/io.h>
+#include <util/delay.h>
+
+void avr_wait(unsigned short msec)
+{
+  6c:	9c 01       	movw	r18, r24
+	TCCR0 = 3;
+  6e:	83 e0       	ldi	r24, 0x03	; 3
+  70:	83 bf       	out	0x33, r24	; 51
+	while (msec--) {
+		TCNT0 = (unsigned char)(256 - (XTAL_FRQ / 64) * 0.001);
+  72:	83 e8       	ldi	r24, 0x83	; 131
+#include <util/delay.h>
+
+void avr_wait(unsigned short msec)
+{
+	TCCR0 = 3;
+	while (msec--) {
+  74:	07 c0       	rjmp	.+14     	; 0x84 <avr_wait+0x18>
+		TCNT0 = (unsigned char)(256 - (XTAL_FRQ / 64) * 0.001);
+  76:	82 bf       	out	0x32, r24	; 50
+		SET_BIT(TIFR, TOV0);
+  78:	98 b7       	in	r25, 0x38	; 56
+  7a:	91 60       	ori	r25, 0x01	; 1
+  7c:	98 bf       	out	0x38, r25	; 56
+		while (!GET_BIT(TIFR, TOV0));
+  7e:	08 b6       	in	r0, 0x38	; 56
+  80:	00 fe       	sbrs	r0, 0
+  82:	fd cf       	rjmp	.-6      	; 0x7e <avr_wait+0x12>
+#include <util/delay.h>
+
+void avr_wait(unsigned short msec)
+{
+	TCCR0 = 3;
+	while (msec--) {
+  84:	21 50       	subi	r18, 0x01	; 1
+  86:	31 09       	sbc	r19, r1
+  88:	b0 f7       	brcc	.-20     	; 0x76 <avr_wait+0xa>
+		TCNT0 = (unsigned char)(256 - (XTAL_FRQ / 64) * 0.001);
+		SET_BIT(TIFR, TOV0);
+		while (!GET_BIT(TIFR, TOV0));
+	}
+	TCCR0 = 0;
+  8a:	13 be       	out	0x33, r1	; 51
+  8c:	08 95       	ret
+
+0000008e <main>:
+}
+
+int main(void)
+{
+	SET_BIT(DDRB, 0);
+  8e:	b8 9a       	sbi	0x17, 0	; 23
+	CLR_BIT(DDRB, 1);
+  90:	b9 98       	cbi	0x17, 1	; 23
+	
+	while(1) {
+		if(GET_BIT(PINB, 1) == 0) 
+  92:	b1 99       	sbic	0x16, 1	; 22
+  94:	fe cf       	rjmp	.-4      	; 0x92 <main+0x4>
+		{
+			SET_BIT(PORTB, 0);
+  96:	c0 9a       	sbi	0x18, 0	; 24
+			avr_wait(500); 
+  98:	84 ef       	ldi	r24, 0xF4	; 244
+  9a:	91 e0       	ldi	r25, 0x01	; 1
+  9c:	0e 94 36 00 	call	0x6c	; 0x6c <avr_wait>
+			CLR_BIT(PORTB, 0);
+  a0:	c0 98       	cbi	0x18, 0	; 24
+			avr_wait(500);
+  a2:	84 ef       	ldi	r24, 0xF4	; 244
+  a4:	91 e0       	ldi	r25, 0x01	; 1
+  a6:	0e 94 36 00 	call	0x6c	; 0x6c <avr_wait>
+  aa:	f3 cf       	rjmp	.-26     	; 0x92 <main+0x4>
+
+000000ac <_exit>:
+  ac:	f8 94       	cli
+
+000000ae <__stop_program>:
+  ae:	ff cf       	rjmp	.-2      	; 0xae <__stop_program>
